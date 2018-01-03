@@ -2,7 +2,6 @@ Continuous Delivery and Continuous Integration are considered one of the basic b
 of any cloud application architecture be it SOA or MicroService architecture. Without CD/CI, it is very easy for a running service instance to misbehave, may it be behavioural or logical bugs in code or misconfiguration of running instance, etc . The easiest way to avoid bugs to affect production environment is to add more developer Unit tests so that these cases don’t get missed at any manual steps involved as part of testing. But, the best way to avoid configuration issues affecting performance or behaviour of a service instance is having a CD/CI pipeline which continuously delivers new build to the production without intervention of any manual step or be it downtime in SLA for the running service instances.
 
 
-
 This project is a “vanilla” flavour implementation of CD/CI pipeline which uses Chef under the hood to continuously deliver new build of a service to production environment without any manual steps involved as part of building artifact or configuration. This project has been designed to keep single most important principle of Distributed Systems in mind that any part of pipeline can break unexpectedly or unforeseeable at any time. But, it should only limit the capability of CD/CI pipeline and not affect the quality of running service in production in any way or have any negative impact on the service quality in production environment.
 
 
@@ -37,10 +36,13 @@ setuppipeline.sh : This reads a properties file to get system credentials for th
 destroypipeline.sh : This shell script finds all nodes bootstrapped and removes the applied role/cookbook from the node(s) and invalidates the node’s secure key from Chef server for stopping future communication with Chef server.
 
 
+
 NEXT STEPS OF DEVELOPMENT
 This project can be forked or adopted to deliver needed architectural requirement of any application or service. Also, there are many logical features that can be added to this project to make it completely full-fledged pipeline. Some of them are as below
 To support zero downtime for service along with continuous deployment, LB like HAProxy or AWS ALB or ELB has to be configured for the environment so that deployment step for service can be prefixed/postfixed with (un)registering the service instance from the LB to control traffic on the service node during (re)deployment.
 Complete Rollback support in case of failed deployment of any new build for any service in production to protect SLA and quality of the service.
+For monitoring, tools like Zipkins or Dabber can be used to tracing requests flow in microservice arch. or platforms like Istio. Same can be integrated into CD pipeline for easy production monitoring, management and security.
+Some bourgeios parts of CD/CI pipeline can be replaced with already available implementations like jenkins for build, etc.
 Integrate support for meta-services needed in the environment like configuration of Load balancer as part of CD/CI pipeline.
 Also, in above “deploy_server_cookbook” cookbook, the application(/service) is not registered as a service to the underlying OS to support (re)start of application(/service) in case node restarts. For this, a symlink needs to be created in the node (as part of recipe) between startapp.sh script (which controls status of application(/service)) and the OS’s init sequence (for example in linux, it is /etc/init.d directory) so that as part of bootstrap of node’s OS, this application(/service) is also (re)started when the node (re)starts.
 Support test cases for cookbook using Chef Kitchen.
