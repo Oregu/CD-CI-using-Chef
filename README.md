@@ -1,12 +1,17 @@
 Continuous Delivery and Continuous Integration are considered one of the basic building blocks 
 of any cloud application architecture be it SOA or MicroService architecture. Without CD/CI, it is very easy for a running service instance to misbehave, may it be behavioural or logical bugs in code or misconfiguration of running instance, etc . The easiest way to avoid bugs to affect production environment is to add more developer Unit tests so that these cases don’t get missed at any manual steps involved as part of testing. But, the best way to avoid configuration issues affecting performance or behaviour of a service instance is having a CD/CI pipeline which continuously delivers new build to the production without intervention of any manual step or be it downtime in SLA for the running service instances.
 
+
+
 This project is a “vanilla” flavour implementation of CD/CI pipeline which uses Chef under the hood to continuously deliver new build of a service to production environment without any manual steps involved as part of building artifact or configuration. This project has been designed to keep single most important principle of Distributed Systems in mind that any part of pipeline can break unexpectedly or unforeseeable at any time. But, it should only limit the capability of CD/CI pipeline and not affect the quality of running service in production in any way or have any negative impact on the service quality in production environment.
+
 
 
 DESIGN
 This project consists of some shell scripts for bootstrapping Chef nodes and 2 Chef cookbooks as below
+
 build_machine_cookbook : Any Chef node which has this cookbook assigned to it constantly keeps track of latest commits on a (github) repository and triggers a build/publish of latest artifacts for the repository whenever a new commit is made to the repository.
+
 deploy_server_cookbook : Any Chef node which has this cookbook assigned to it acts as a production deployment server for the service instance and also periodically (24 Hrs) checks if a latest build of service is available. If so, it stops the service, deploys the new service build and restarts the service instance.
 
 For simplicity of the implementation, some of the steps needed to get the node into desired state as part of chef-client run are added to shell script instead of ideally being configured in recipe. The cookbook’s recipes can be easily refactored to accomplish the same in recipe instead of executing through shell script executed as part of recipe run.
@@ -15,11 +20,14 @@ build_machine_role
 deploy_server_role
 Role defines some of the custom cookbooks, available on Chef Supermarket and uploaded to chef server using BerkShelf as part of chef server account setup, that needs to be installed on the node as part of chef-client run and also some override attribute values needed by the cookbook(s). 
 
+
+
 Each node which is configured for either of above 2 cookbooks also needs some other custom cookbooks available in Chef Supermarket including the ones needed for java, gradle, git, etc. The BerkShelf allows to upload these custom cookbooks to Chef server so that if a node needs it (assigned through Role), it can be downloaded by the node from chef server as part of chef-client run.
 
 Also, one environment is also added to test the working of project. Multiple environment can be setup, each for various stages of deployment including test and pre-release environment(s).
 
 Security related information including node’s ssh keys can be added to data bags. However, for this project, the ssh key for github is added to the cookbook for ease. But, ideally it should be accessed via data bag for security.
+
 
 
 HOW TO USE
