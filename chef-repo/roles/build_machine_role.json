@@ -1,0 +1,34 @@
+{
+   "name": "build_machine_role",
+   "description": "Makes node install appropriate packages for performing as build machine.",
+   "json_class": "Chef::Role",
+   "default_attributes": {
+     "chef_client": {
+       "interval": 6000,
+       "splay": 600
+     }
+   },
+   "override_attributes": {
+     "java" : {
+       "jdk_version": "8",
+       "install_flavor": "oracle",
+       "oracle": {"accept_oracle_download_terms": true}
+     },
+     "gradle" : {
+       "version": "#{node[:gradle][:version]}",
+       "home": "#{node[:gradle][:home]}",
+       "url": "#{node[:gradle][:url]}",
+       "checksum": "#{node[:gradle][:checksum]}"
+     }
+   },
+   "chef_type": "role",
+   "run_list": ["recipe[chef-client::default]",
+                "recipe[chef-client::delete_validation]",
+                "recipe[git::default]",
+                "recipe[git::source]",
+                "recipe[java]",
+                "recipe[gradle]"
+   ],
+   "env_run_lists": {
+   }
+}

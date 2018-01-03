@@ -1,0 +1,25 @@
+{
+   "name": "deploy_server_role",
+   "description": "Makes node install appropriate packages for performing as deployment server.",
+   "json_class": "Chef::Role",
+   "default_attributes": {
+     "chef_client": {
+       "interval": 6000,
+       "splay": 600
+     }
+   },
+   "override_attributes": {
+     "java" : {
+       "jdk_version": "8",
+       "install_flavor": "oracle",
+       "oracle": {"accept_oracle_download_terms": true}
+     }
+   },
+   "chef_type": "role",
+   "run_list": ["recipe[chef-client::default]",
+                "recipe[chef-client::delete_validation]",
+                "recipe[java]"
+   ],
+   "env_run_lists": {
+   }
+}

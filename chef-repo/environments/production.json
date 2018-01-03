@@ -1,0 +1,22 @@
+{
+  "name": "Production",
+  "description": "Production environment",
+  "cookbook_versions": {
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+  },
+  "override_attributes": {
+    "gradle": {
+      "home" : "/home/builduser/gradle",
+      "version" : "4.3",
+      "url" : "https://services.gradle.org/distributions/gradle-4.3-rc-1-bin.zip",
+      "checksum" : "a2fbaa80f98b59509e3f956c9fdaeb593516ea633ce80946735fa7cb7dd74a55"
+    },
+    "build_machine_cookbook": {
+      "git_username" : "bhavneshgugnani",
+      "git_email" : "bhavnesh.gugnani@gmail.com"
+    }
+  }
+}
